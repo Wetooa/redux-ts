@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import cartItems from "../../cartItems";
+import cartItems, { CartItemsProps } from "../../cartItems";
 
 interface CartInitialState {
-  cartItems: Array<any>;
+  cartItems: CartItemsProps[];
   amount: number;
   total: number;
   isLoading: boolean;
@@ -11,7 +11,7 @@ interface CartInitialState {
 
 const initialState: CartInitialState = {
   cartItems: cartItems,
-  amount: 0,
+  amount: 4,
   total: 0,
   isLoading: true,
 };
@@ -20,16 +20,46 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    increment: (state) => {
+    clearCart: (state) => {
+      state.cartItems = [];
+      state.amount = 0;
+      state.total = 0;
+    },
+    increment: (state, { payload }) => {
+      const cartItem = state.cartItems.find(
+        (item: CartItemsProps) => payload === item.id
+      );
+      cartItem!.amount += 1;
       state.amount += 1;
     },
-    decrement: (state) => {
+    decrement: (state, { payload }) => {
+      const cartItem = state.cartItems.find(
+        (item: CartItemsProps) => payload === item.id
+      );
+      cartItem!.amount -= 1;
       state.amount -= 1;
+      if (cartItem!.amount === 0) {
+        state.cartItems = state.cartItems.filter(
+          (item: CartItemsProps) => payload !== item.id
+        );
+      }
+    },
+    removeItem: (state, { payload }) => {
+      state.cartItems = state.cartItems.filter(
+        (item: CartItemsProps) => payload !== item.id
+      );
+    },
+    calculateTotal: (state) => {
+      state.total = 0;
+      state.cartItems.forEach((item: CartItemsProps) => {
+        state.total += item.amount * parseFloat(item.price);
+      });
     },
   },
 });
 
-export const { increment, decrement } = cartSlice.actions;
+export const { increment, decrement, clearCart, removeItem, calculateTotal } =
+  cartSlice.actions;
 
 // console.log(cartSlice);
 export const selectCount = (state: RootState) => state.cart;

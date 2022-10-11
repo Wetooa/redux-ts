@@ -1,9 +1,17 @@
-import { useAppSelector } from "../features/hooks";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
 import CartItem from "./CartItem";
 import { CartItemsProps } from "../cartItems";
+import { calculateTotal, clearCart } from "../features/cart/cartSlice";
+import { useEffect } from "react";
 
 function CartContainer() {
   const { cartItems, amount, total } = useAppSelector((store) => store.cart);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(calculateTotal());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount]);
 
   if (amount < 1) {
     return (
@@ -28,10 +36,16 @@ function CartContainer() {
           <hr />
           <div className="cart-total">
             <h4>
-              total <span>${total}</span>
+              {/* limiting float decimals */}
+              total <span>${total.toFixed(2)}</span>
             </h4>
           </div>
-          <button className="btn clear-btn">clear cart</button>
+          <button
+            className="btn clear-btn"
+            onClick={() => dispatch(clearCart())}
+          >
+            clear cart
+          </button>
         </footer>
       </header>
     </section>
