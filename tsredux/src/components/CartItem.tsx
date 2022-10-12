@@ -23,7 +23,12 @@ function CartItem(item: CartItemsProps) {
           <ChevronUp />
         </button>
         <p className="amount">{amount}</p>
-        <button className="amount-btn" onClick={() => dispatch(decrement(id))}>
+        <button
+          className="amount-btn"
+          onClick={() => {
+            amount !== 1 ? dispatch(decrement(id)) : dispatch(removeItem(id));
+          }}
+        >
           <ChevronDown />
         </button>
       </div>

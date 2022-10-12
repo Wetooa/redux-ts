@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import CartItem from "./CartItem";
 import { CartItemsProps } from "../cartItems";
-import { calculateTotal, clearCart } from "../features/cart/cartSlice";
+import { calculateTotals, clearCart } from "../features/cart/cartSlice";
 import { useEffect } from "react";
 
 function CartContainer() {
@@ -9,9 +9,9 @@ function CartContainer() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(calculateTotal());
+    dispatch(calculateTotals());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amount]);
+  }, [cartItems]);
 
   if (amount < 1) {
     return (
