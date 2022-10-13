@@ -1,8 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import CartItem from "./CartItem";
 import { CartItemsProps } from "../cartItems";
-import { calculateTotals, clearCart } from "../features/cart/cartSlice";
 import { useEffect } from "react";
+import { calculateTotals } from "../features/cart/cartSlice";
+import { toggleModal } from "../features/modal/modalSlice";
 
 function CartContainer() {
   const { cartItems, amount, total } = useAppSelector((store) => store.cart);
@@ -42,7 +43,7 @@ function CartContainer() {
           </div>
           <button
             className="btn clear-btn"
-            onClick={() => dispatch(clearCart())}
+            onClick={() => dispatch(toggleModal())}
           >
             clear cart
           </button>
